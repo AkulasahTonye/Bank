@@ -1,16 +1,15 @@
 package main
 
 import (
-	"errors"
+	"example.com/Bank/fileops"
 	"fmt"
-	"os"
-	"strconv"
+	"github.com/Pallinder/go-randomdata"
 )
 
 const accountBalanceFile = "balance.txt"
 
 func main() {
-	accountBalance, err := getBalanceFromFile()
+	accountBalance, err := fileops.GetFloatFromFile(accountBalanceFile)
 
 	if err != nil {
 		fmt.Println("ERROR MESSAGE!!")
@@ -20,13 +19,10 @@ func main() {
 	}
 
 	fmt.Println("Welcome to Go Bank!")
+	fmt.Println(randomdata.PhoneNumber())
 
 	for {
-		fmt.Println("What do you want to do")
-		fmt.Println("1. Check Balance")
-		fmt.Println("2. Deposit Money")
-		fmt.Println("3. Withdraw Money")
-		fmt.Println("4. Exit")
+		presentOptions()
 
 		var Choice int
 		fmt.Print("Enter Your Choice: ")
@@ -46,7 +42,7 @@ func main() {
 			}
 			accountBalance += depositAmount // same thing as setting AccountBalance = AccountBalance + DepositAmount
 			fmt.Println("Updated Account Balance:", accountBalance)
-			writeBalanceToFile(accountBalance)
+			fileops.WriteFloatToFile(accountBalance, accountBalanceFile)
 
 		case 3:
 			fmt.Print("Withdraw Amount:")
@@ -64,7 +60,7 @@ func main() {
 
 			accountBalance -= withdrawalAmount // same thing as setting AccountBalance = AccountBalance - WithdrawalAmount
 			fmt.Println("Updated Account Balance:", accountBalance)
-			writeBalanceToFile(accountBalance)
+			fileops.WriteFloatToFile(accountBalance, accountBalanceFile)
 
 		default:
 			println("Goodbye!")
@@ -72,27 +68,4 @@ func main() {
 			return
 		}
 	}
-}
-
-func writeBalanceToFile(balance float64) {
-	balanceText := fmt.Sprint(balance)
-	err := os.WriteFile(accountBalanceFile, []byte(balanceText), 0644)
-	if err != nil {
-		return
-	}
-}
-
-func getBalanceFromFile() (float64, error) {
-	data, err := os.ReadFile(accountBalanceFile)
-
-	if err != nil {
-		return 0, errors.New("failed to get data input")
-	}
-
-	balanceTicket := string(data)
-	balance, err := strconv.ParseFloat(balanceTicket, 64)
-	if err != nil {
-		return 0, errors.New("input invalid")
-	}
-	return balance, err
 }
