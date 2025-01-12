@@ -1,8 +1,8 @@
 package main
 
 import (
-	"example.com/Bank/fileops"
 	"fmt"
+	"github.com/AkulasahTonye/Banking-App/fileops"
 	"github.com/Pallinder/go-randomdata"
 )
 
